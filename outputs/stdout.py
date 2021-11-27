@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from __future__ import division
-import sys, calendar, itertools, hashlib, urllib2
+import sys, calendar, itertools, hashlib, urllib
 from collections import OrderedDict
 
 import zxcvbn
@@ -51,11 +51,11 @@ def run(db, args):
     fmt_lambda = lambda password, count, score, users: [password, len(password), count, __coloured_score(score), __get_usage(password) if not args.no_hibp else '', __process_users(users)]
     default_align = [">", "<", "<", "<", "<", ""]
 
-    top_passwords = db.get_passwords(sortby=lambda (password, count, score, users): (count, score, len(password)), reverse=True, limit=args.limit)
+    top_passwords = db.get_passwords(sortby=lambda password_count_score_users: (password_count_score_users[1], password_count_score_users[2], len(password_count_score_users[0])), reverse=True, limit=args.limit)
     __print_table(title="Top {} Passwords (by use, score)".format(args.limit), headers=headers, align=default_align,
                   values=top_passwords, format=fmt_lambda)
 
-    bad_pass = db.get_passwords(sortby=lambda (password, count, score, users): (zxcvbn.password_strength(password)["score"], len(password), len(users)), reverse=False, limit=args.limit)
+    bad_pass = db.get_passwords(sortby=lambda password_count_score_users: (zxcvbn.password_strength(password_count_score_users[0])["score"], len(password_count_score_users[0]), len(password_count_score_users[3])), reverse=False, limit=args.limit)
     __print_table(title="Top {} Worst Passwords (by score, length)".format(args.limit), headers=headers,
                   align=default_align, values=bad_pass, format=fmt_lambda)
 
@@ -94,8 +94,8 @@ def __coloured_score(score, text=None):
 def __get_usage(password):
     try:
         sha1_password = hashlib.sha1(password).hexdigest().upper()
-        request = urllib2.Request(HIBP_CHECK_API.format(sha1_password[:5]), headers={"User-Agent": "cracke-dit"})
-        response = urllib2.urlopen(request).read()
+        request = urllib.Request(HIBP_CHECK_API.format(sha1_password[:5]), headers={"User-Agent": "cracke-dit"})
+        response = urllib.urlopen(request).read()
         lines = dict(map(lambda line: line.split(":"), response.split("\r\n")))
         passwords = {password: int(count) for password, count in lines.iteritems()}
 

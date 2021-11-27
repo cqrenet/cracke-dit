@@ -68,7 +68,7 @@ if __name__ == "__main__":
             spinner = itertools.cycle(['-', '/', '|', '\\'])
 
             while not stopper.is_set():
-                sys.stdout.write("[" + spinner.next() + "] Processing...   \r")
+                sys.stdout.write("[" + next(spinner) + "] Processing...   \r")
                 sys.stdout.flush()
                 time.sleep(0.2)
 

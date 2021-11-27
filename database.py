@@ -94,7 +94,7 @@ class HashDatabase:
         passwords = ((user, len(list(count))) for user, count in itertools.groupby(results, lambda r: r["username"]))
 
         return sorted(list((user, self.__get_passwords_for_user(user))
-                           for user, count in passwords), key=lambda (user, passwords): len(passwords), reverse=True)[:limit]
+                           for user, count in passwords), key=lambda user_passwords: len(user_passwords[1]), reverse=True)[:limit]
 
     def get_passwords(self, sortby, reverse=True, limit=10):
         results = sorted(self.table.search((Query().password.exists()) & self.only_users & self.only_enabled), key=lambda r: r["password"])

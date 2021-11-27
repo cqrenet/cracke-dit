@@ -19,7 +19,7 @@ def run(db, args):
     html = []
 
     html.append("<h1>Top 25 Passwords</h1>")
-    top_passwords = db.get_top_passwords(sortby=lambda (password, count, score, users): (count, score, len(password)), reverse=False, limit=25)
+    top_passwords = db.get_top_passwords(sortby=lambda password_count_score_users: (password_count_score_users[1], password_count_score_users[2], len(password_count_score_users[0])), reverse=False, limit=25)
     html.append(__table(headers=["Password", "Length", "Count", "Score", "Users"], items=top_passwords,
                         format=lambda password, count, score, users: [password, len(password), count, __get_score(score), __get_users(users)]))
 

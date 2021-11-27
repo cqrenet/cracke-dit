@@ -5,3 +5,4 @@
 db.json
 *.hashes.ntlm
 *.pot
+__pycache__
