@@ -54,7 +54,7 @@ def process_local(system, ntds, historic):
     spinner = Thread(target=__update, args=(stopper, hashes))
     spinner.start()
     NTDSHashes(ntds, bootKey, noLMHash=ops.checkNoLMHashPolicy(), useVSSMethod=True, justNTLM=True,
-               printUserStatus=True, history=historic, lastLogon=True, pwdLastSet=True,
+               printUserStatus=True, history=historic, pwdLastSet=True,
                perSecretCallback=lambda type, secret: hashes.append(__process_hash(secret))).dump()
 
     stopper.set()
